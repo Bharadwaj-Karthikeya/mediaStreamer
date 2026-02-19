@@ -3,24 +3,22 @@ import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 export default function Layout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+    setSidebarOpen(!sidebarOpen)
+  }
 
   return (
-    <div className="bg-white dark:bg-black min-h-screen transition-colors">
+    <div className="app-shell min-h-screen">
       <Navbar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} />
-      <main 
-        className={`pt-14 transition-all duration-300 ${
-          sidebarOpen ? 'ml-60' : 'ml-20'
+      <main
+        className={`page-main ${
+          sidebarOpen ? 'main-offset-wide' : 'main-offset-compact'
         }`}
       >
-        <div className="p-6">
-          {children}
-        </div>
+        <div className="page-container">{children}</div>
       </main>
     </div>
   )

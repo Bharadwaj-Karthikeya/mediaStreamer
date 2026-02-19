@@ -52,12 +52,10 @@ export default function Sidebar({ isOpen = true }) {
 
   return (
     <aside
-      className={`fixed left-0 top-14 bottom-0 z-40 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-black overflow-y-auto transition-all duration-300 ${
-        isOpen ? 'w-60' : 'w-20'
-      }`}
+      className={`sidebar-panel ${isOpen ? 'sidebar-wide' : 'sidebar-compact'}`}
       aria-label="Primary"
     >
-      <div className="py-3">
+      <div className="sidebar-content">
         {menuItems.map((item) => {
           const Icon = item.icon
           const active = isRouteActive(location.pathname, item.path)
@@ -67,21 +65,13 @@ export default function Sidebar({ isOpen = true }) {
               key={item.path}
               to={item.path}
               title={item.label}
-              className={`flex items-center gap-4 px-4 py-3 transition-colors ${
-                active
-                  ? 'bg-gray-100 dark:bg-gray-800 text-black dark:text-white'
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-              }`}
+              className={`sidebar-link ${active ? 'is-active' : ''}`}
             >
               <Icon
-                className={`w-6 h-6 shrink-0 ${
-                  active ? 'text-black dark:text-white' : 'text-gray-500 dark:text-gray-400'
-                }`}
+                className={`sidebar-icon ${active ? 'is-active' : ''}`}
               />
               <span
-                className={`text-sm font-medium whitespace-nowrap transition-opacity duration-200 ${
-                  isOpen ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`sidebar-label ${isOpen ? 'is-visible' : ''}`}
                 aria-hidden={!isOpen}
               >
                 {item.label}

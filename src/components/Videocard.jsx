@@ -1,16 +1,25 @@
 import { forwardRef } from 'react'
+import { Link } from 'react-router-dom'
 
 const VideoCard = forwardRef(function VideoCard({ video }, ref) {
+    const videoId = video.id?.videoId || video.id || ''
+    const title = video.title || video.snippet?.title || 'Untitled'
+    const thumbnail = video.thumbnail || video.snippet?.thumbnails?.high?.url || video.snippet?.thumbnails?.default?.url
+    const channelTitle = video.channelTitle || video.snippet?.channelTitle || 'Unknown Channel'
+
     return (
-        <div ref={ref} className="bg-gray-800 rounded overflow-hidden shadow-lg">
-            <a href={`/watch/${video.id}`} rel="noopener noreferrer">
-                <img src={video.thumbnail || video.snippet?.thumbnails?.default?.url} alt={video.title || video.snippet?.title || 'Untitled'} className="w-full h-48 object-cover" />
-                <div className="px-4 py-2">
-                    <h2 className="text-white font-semibold">{video.title || video.snippet?.title || 'Untitled'}</h2>
-                    <p className="text-sm text-gray-400">{video.channelTitle || video.snippet?.channelTitle || 'Unknown Channel'}</p>
+        <article ref={ref} className="video-card">
+            <Link to={videoId ? `/watch/${videoId}` : '#'} className="video-card__link">
+                <div className="video-thumb">
+                    <img src={thumbnail} alt={title} />
+                    <span className="video-duration">Now</span>
                 </div>
-            </a>
-        </div>
+                <div className="video-meta">
+                    <h2 className="video-title">{title}</h2>
+                    <p className="video-channel">{channelTitle}</p>
+                </div>
+            </Link>
+        </article>
     )
 })
 
