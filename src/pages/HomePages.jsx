@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ShimmerCard from "../components/Shimmer";
-import VideoCard from "../components/Videocard";
+import VideoCard from "../components/VideoCard";
 import { useState, useEffect } from "react";
 import { Pagination } from "../components/Pagination";
 
@@ -18,8 +18,9 @@ const HomePages = () => {
     useEffect(() => {
         async function fetchVideos() {
             try {
+                const API_KEY = import.meta.env.VITE_VIDEO_API_KEY;
                 const currentPageToken = tokens[page - 1] || "";
-                const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=10&pageToken=${currentPageToken}&key=AIzaSyBscIgAQ99eDZh66pZEaWOKlVOmopK5G5A`);
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=10&pageToken=${currentPageToken}&key=${API_KEY}`);
                 
                 const data = await response.json();
 

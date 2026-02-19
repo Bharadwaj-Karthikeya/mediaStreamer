@@ -1,5 +1,5 @@
 import ShimmerCard from "../components/Shimmer";
-import VideoCard from "../components/Videocard";
+import VideoCard from "../components/VideoCard";
 
 import { useState } from "react";
 
@@ -9,7 +9,8 @@ export default function Home(){
 
     async function fetchTrendingVideos() {
         try {
-            const response = await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=10&key=AIzaSyBscIgAQ99eDZh66pZEaWOKlVOmopK5G5A ');
+            const API_KEY = import.meta.env.VITE_VIDEO_API_KEY;
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=10&key=${API_KEY}`);
             
             const data = await response.json();
 
@@ -35,7 +36,7 @@ export default function Home(){
     return (
         <>
             <h1 className="text-3xl font-bold">Trending Videos</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4">
                 {loading
                     ? Array(10).fill(0).map((_,i) => (
                         <ShimmerCard key={i} />

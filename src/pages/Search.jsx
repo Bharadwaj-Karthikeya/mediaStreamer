@@ -1,104 +1,105 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import ShimmerCard from "../components/Shimmer";
-import VideoCard from "../components/Videocard";
+import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import VideoCard from '../components/VideoCard'
+import ShimmerCard from '../components/Shimmer'
 
 export default function Search() {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q');
+  
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [searchParams] = useSearchParams();
-  const query = (searchParams.get("q") || "").trim();
-  const apiKey = "AIzaSyBscIgAQ99eDZh66pZEaWOKlVOmopK5G5A";
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    let ignore = false;
+    if (!searchQuery) return;
 
-    async function fetchTrendingVideos() {
-      if (!query) {
-        setVideos([]);
-        setLoading(false);
-        setError("");
-        return;
-      }
-
-      if (!apiKey) {
-        setError("Missing YouTube API key. Please define VITE_YOUTUBE_API_KEY in your .env file.");
-        setVideos([]);
-        setLoading(false);
-        return;
-      }
-
+    async function fetchSearchResults() {
       setLoading(true);
-      setError("");
-
+      setError(null);
+      
       try {
+        const API_KEY = import.meta.env.VITE_VIDEO_API_KEY;
+        
         const response = await fetch(
-          `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${query}&key=${apiKey}`,
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=${searchQuery}&type=video&key=${API_KEY}`
         );
 
         if (!response.ok) {
-          const { error: apiError } = await response.json().catch(() => ({ error: {} }));
-          const reason = apiError?.errors?.[0]?.reason || apiError?.message || "Unknown error";
-          throw new Error(`Request failed (${response.status}): ${reason}`);
+          throw new Error('Failed to fetch search results');
         }
 
         const data = await response.json();
-
-        const formattedVideos = (data.items || [])
-          .map((video) => ({
-            id:
-              video.id?.videoId ||
-              video.id?.channelId ||
-              video.id?.playlistId ||
-              video.id,
-            title: video.snippet?.title || "Untitled",
-            thumbnail:
-              video.snippet?.thumbnails?.high?.url ||
-              video.snippet?.thumbnails?.medium?.url ||
-              video.snippet?.thumbnails?.default?.url,
-            channelTitle: video.snippet?.channelTitle || "Unknown channel",
-          }))
-          .filter((video) => Boolean(video.id && video.thumbnail));
-
-        if (!ignore) {
-          setVideos(formattedVideos);
-        }
-      } catch (error) {
-        console.error("Error fetching trending videos:", error);
-        if (!ignore) {
-          setVideos([]);
-          setError(error.message || "Failed to fetch videos");
-        }
+        setVideos(data.items || []);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching search results:', err);
       } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     }
+    
+    fetchSearchResults();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [searchQuery]);
 
-    fetchTrendingVideos();
-
-    return () => {
-      ignore = true;
-    };
-  }, [query, apiKey]);
+  if (!searchQuery) {
+    return (
+      <div className="text-black dark:text-white text-center py-20">
+        <h2 className="text-2xl font-semibold mb-2">Search for videos</h2>
+        <p className="text-gray-600 dark:text-gray-400">Enter a search term to find videos</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <h1 className="text-3xl font-bold">Search Results for "{query}"</h1>
-      {error && (
-        <div className="mt-4 rounded border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-          {error}
+    <div className="text-black dark:text-white">
+      {/* Search Header */}
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold">
+          Search results for "{searchQuery}"
+        </h1>
+      </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8">
+          {Array.from({ length: 24 }).map((_, index) => (
+            <ShimmerCard key={index} />
+          ))}
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-        {loading
-          ? Array(10)
-              .fill(0)
-              .map((_, i) => <ShimmerCard key={i} />)
-          : videos.map((video) => <VideoCard key={video.id} video={video} />)}
-      </div>
-    </>
-  );
+
+      {/* Error State */}
+      {error && (
+        <div className="text-center py-20">
+          <p className="text-red-500 mb-2">Error loading search results</p>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Search Results Grid */}
+      {!loading && !error && videos.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8">
+          {videos.map((video) => (
+            <VideoCard key={video.id.videoId || video.id} video={video} />
+          ))}
+        </div>
+      )}
+
+      {/* No Results State */}
+      {!loading && !error && videos.length === 0 && (
+        <div className="text-center py-20">
+          <h2 className="text-2xl font-semibold mb-2">No results found</h2>
+          <p className="text-gray-600 dark:text-gray-400">Try a different search term</p>
+        </div>
+      )}
+    </div>
+  )
 }
