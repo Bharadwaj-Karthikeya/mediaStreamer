@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import RecommendedVideo from '../components/RecommendedVideo'
+import RecommendedVideo from '../components/RecommendedVideo.jsx'
 
 const getLastWatchedVideo = () => {
   if (typeof window === 'undefined') {

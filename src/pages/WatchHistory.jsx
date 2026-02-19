@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import VideoCard from '../components/VideoCard'
+import VideoCard from '../components/VideoCard.jsx'
 
 export default function WatchHistory() {
   const [watchHistory, setWatchHistory] = useState(() => {

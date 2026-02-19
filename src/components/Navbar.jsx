@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import SearchHistory from './SearchHistory'
+import SearchHistory from './SearchHistory.jsx'
 
 export default function Navbar({ toggleSidebar }) {
   const [searchQuery, setSearchQuery] = useState('');

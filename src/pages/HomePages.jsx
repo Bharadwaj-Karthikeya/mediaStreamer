@@ -1,8 +1,8 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import ShimmerCard from "../components/Shimmer";
-import VideoCard from "../components/VideoCard";
+import ShimmerCard from "../components/Shimmer.jsx";
+import VideoCard from "../components/VideoCard.jsx";
 import { useState, useEffect } from "react";
-import { Pagination } from "../components/Pagination";
+import { Pagination } from "../components/Pagination.jsx";
 
 const HomePages = () => {
     const [videos, setVideos] = useState([]);

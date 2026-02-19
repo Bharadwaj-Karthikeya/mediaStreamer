@@ -1,5 +1,5 @@
-import ShimmerCard from "../components/Shimmer";
-import VideoCard from "../components/VideoCard";
+import ShimmerCard from "../components/Shimmer.jsx";
+import VideoCard from "../components/VideoCard.jsx";
 
 import { useState } from "react";
 

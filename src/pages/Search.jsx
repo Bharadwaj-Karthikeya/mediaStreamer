@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import VideoCard from '../components/VideoCard'
-import ShimmerCard from '../components/Shimmer'
+import VideoCard from '../components/VideoCard.jsx'
+import ShimmerCard from '../components/Shimmer.jsx'
 
 export default function Search() {
   const [searchParams] = useSearchParams();

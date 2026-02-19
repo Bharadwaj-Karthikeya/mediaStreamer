@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import VideoCard from '../components/VideoCard'
-import ShimmerCard from '../components/Shimmer'
+import VideoCard from '../components/VideoCard.jsx'
+import ShimmerCard from '../components/Shimmer.jsx'
 
 const normalizeVideoId = (video) => {
     if (!video) return null;
